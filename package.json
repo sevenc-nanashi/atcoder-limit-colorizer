@@ -1,6 +1,6 @@
 {
   "name": "atcoder-limit-colorizer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Nanashi. <https://sevenc7c.com>",
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
