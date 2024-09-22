@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name AtCoder Limit Colorizer
-// @description AtCoderの制約を色付けします
-// @version 0.0.1
+// @description Colorize AtCoder constraints based on their values
+// @version 0.0.2
 // @homepage https://github.com/sevenc-nanashi/atcoder-limit-colorizer
 // @author Nanashi. <https://sevenc7c.com>
 // @match https://atcoder.jp/contests/*/tasks/*
