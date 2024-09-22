@@ -4,7 +4,7 @@ import packageJson from "./package.json";
 export const build = async () => {
   const bannerMap: Record<string, string> = {
     name: "AtCoder Limit Colorizer",
-    description: "AtCoderの制約を色付けします",
+    description: "Colorize AtCoder constraints based on their values",
     version: `${packageJson.version}`,
     homepage: packageJson.homepage,
     author: packageJson.author,
