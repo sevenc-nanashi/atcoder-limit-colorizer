@@ -1,9 +1,9 @@
 export const gray = "#808080";
 export const brown = "#804000";
 export const green = "#008000";
-export const cyan = "#00c0c0";
+export const cyan = "#00a0a0";
 export const blue = "#0000ff";
-export const yellow = "#c0c000";
+export const yellow = "#a0a000";
 export const orange = "#ff8000";
 export const red = "#ff0000";
 

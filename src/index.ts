@@ -117,7 +117,14 @@ const calculateTree = (tree_: Tree): number => {
   return tree[0];
 };
 
-const colorize = (elements: HTMLElement[]): number | undefined => {
+const paint = (elements: HTMLElement | HTMLElement[], value: number) => {
+  const color = getColorFromNumber(value);
+  for (const e of Array.isArray(elements) ? elements : [elements]) {
+    e.style.color = color;
+  }
+};
+
+const calculateAndColorize = (elements: HTMLElement[]): number | undefined => {
   const math = katexHtmlToExpr(elements);
   if (math === undefined) {
     return;
@@ -127,10 +134,7 @@ const colorize = (elements: HTMLElement[]): number | undefined => {
   }
   const parsed = parseExpr(math);
   const result = calculateTree(parsed);
-  const color = getColorFromNumber(result);
-  for (const e of elements) {
-    e.style.color = color;
-  }
+  paint(elements, result);
 
   return result;
 };
@@ -184,14 +188,14 @@ const colorizeSection = (constraintRoot: HTMLElement) => {
         if (!variable) {
           continue;
         }
-        e.style.color = getColorFromNumber(currentStatement.maxValue);
+        paint(e, currentStatement.maxValue);
         variableMaxes[variable] = Math.abs(currentStatement.maxValue);
       }
       currentStatement.elements.length = 0;
       currentStatement.maxValue = 0;
     };
     const colorizeCurrentElement = () => {
-      const value = colorize(currentElements);
+      const value = calculateAndColorize(currentElements);
       if (value !== undefined && Math.abs(value) > currentStatement.maxValue) {
         currentStatement.maxValue = Math.abs(value);
       }
@@ -222,7 +226,7 @@ const colorizeSection = (constraintRoot: HTMLElement) => {
       const variable = getVariable(element);
       if (variable) {
         if (variableMaxes[variable]) {
-          element.style.color = getColorFromNumber(variableMaxes[variable]);
+          paint(element, variableMaxes[variable]);
           if (currentStatement.maxValue < variableMaxes[variable]) {
             currentStatement.maxValue = variableMaxes[variable];
           }
