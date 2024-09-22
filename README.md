@@ -6,12 +6,12 @@ A userscript that colors the constraints based on their limits.
 ## Colors
 
 - $N = 998244353, 1000000007$: Special (`#0dcaf0`, from the "Unknown" difficulty of AtCoder Problems)
-- $N \leq 10**18$: Red
-- $N \leq 10**9$: Orange
-- $N \leq 10**5$: Yellow
-- $N \leq 1000$: Blue
-- $N \leq 100$: Cyan
-- $N \leq 10$: Green
+- $N \geq 10**18$: Red
+- $N \geq 10**9$: Orange
+- $N \geq 10**5$: Yellow
+- $N \geq 1000$: Blue
+- $N \geq 100$: Cyan
+- $N \geq 10$: Green
 - Otherwise: Brown
 
 
