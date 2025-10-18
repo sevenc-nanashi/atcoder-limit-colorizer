@@ -1,4 +1,5 @@
-import { getColorFromNumber } from "./colors";
+import { getColorFromNumber } from "./colors.ts";
+import { abs } from "./math.ts";
 
 const katexHtmlToExpr = (html: HTMLElement[]): string | undefined => {
   let text = "";
@@ -40,7 +41,7 @@ const katexHtmlToExpr = (html: HTMLElement[]): string | undefined => {
   return text;
 };
 
-type Tree = string | number | Tree[];
+type Tree = string | bigint | Tree[];
 const parseExpr = (expr: string): Tree => {
   let bracket = 0;
   const result = [];
@@ -78,16 +79,18 @@ const parseExpr = (expr: string): Tree => {
   return result;
 };
 
-const calculateTree = (tree_: Tree): number => {
+const calculateTree = (tree_: Tree): bigint => {
   const tree = structuredClone(tree_);
   if (typeof tree === "string") {
-    return Number.parseInt(tree);
+    // return Number.parseInt(tree);
+    return BigInt(tree);
   }
-  if (typeof tree === "number") {
-    return tree;
+  if (typeof tree === "bigint") {
+    return BigInt(tree);
   }
   if (tree.length === 1) {
-    return Number.parseInt(tree[0] as string);
+    // return Number.parseInt(tree[0] as string);
+    return BigInt(tree[0] as string);
   }
 
   for (let i = 1; i < tree.length; i += 2) {
@@ -111,20 +114,20 @@ const calculateTree = (tree_: Tree): number => {
   if (tree.length !== 1) {
     throw new Error(`Invalid tree, ${tree}`);
   }
-  if (typeof tree[0] !== "number") {
+  if (typeof tree[0] !== "bigint") {
     throw new Error(`Invalid tree, ${tree}`);
   }
   return tree[0];
 };
 
-const paint = (elements: HTMLElement | HTMLElement[], value: number) => {
+const paint = (elements: HTMLElement | HTMLElement[], value: bigint) => {
   const color = getColorFromNumber(value);
   for (const e of Array.isArray(elements) ? elements : [elements]) {
     e.style.color = color;
   }
 };
 
-const calculateAndColorize = (elements: HTMLElement[]): number | undefined => {
+const calculateAndColorize = (elements: HTMLElement[]): bigint | undefined => {
   const math = katexHtmlToExpr(elements);
   if (math === undefined) {
     return;
@@ -153,7 +156,7 @@ const getVariable = (element: HTMLSpanElement): string | undefined => {
 };
 
 const separators = ["mpunct", "mrel", "mopen", "mclose", "mop"];
-type Statement = { elements: HTMLSpanElement[]; maxValue: number };
+type Statement = { elements: HTMLSpanElement[]; maxValue: bigint };
 
 const colorizeAll = () => {
   const constraintHeaders = Array.from(
@@ -168,7 +171,7 @@ const colorizeAll = () => {
   }
 };
 const colorizeSection = (constraintRoot: HTMLElement) => {
-  const variableMaxes: Record<string, number> = {};
+  const variableMaxes: Record<string, bigint> = {};
 
   const maths = Array.from(
     constraintRoot.querySelectorAll(".katex-html:not([data-alc-colorized])"),
@@ -181,7 +184,7 @@ const colorizeSection = (constraintRoot: HTMLElement) => {
     ).filter((e) => !!e.textContent);
 
     const currentElements: HTMLSpanElement[] = [];
-    const currentStatement: Statement = { elements: [], maxValue: 0 };
+    const currentStatement: Statement = { elements: [], maxValue: 0n };
     const colorizeCurrentStatement = () => {
       for (const e of currentStatement.elements.filter((e) => getVariable(e))) {
         const variable = getVariable(e);
@@ -189,15 +192,15 @@ const colorizeSection = (constraintRoot: HTMLElement) => {
           continue;
         }
         paint(e, currentStatement.maxValue);
-        variableMaxes[variable] = Math.abs(currentStatement.maxValue);
+        variableMaxes[variable] = abs(currentStatement.maxValue);
       }
       currentStatement.elements.length = 0;
-      currentStatement.maxValue = 0;
+      currentStatement.maxValue = 0n;
     };
     const colorizeCurrentElement = () => {
       const value = calculateAndColorize(currentElements);
-      if (value !== undefined && Math.abs(value) > currentStatement.maxValue) {
-        currentStatement.maxValue = Math.abs(value);
+      if (value !== undefined && abs(value) > currentStatement.maxValue) {
+        currentStatement.maxValue = abs(value);
       }
       currentElements.length = 0;
     };
